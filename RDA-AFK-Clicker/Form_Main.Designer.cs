@@ -1,6 +1,6 @@
 ﻿namespace RDA_AFK_Clicker
 {
-    partial class Form1
+    partial class Form_Main
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
             this.label_Gold = new System.Windows.Forms.Label();
             this.label_BindKey = new System.Windows.Forms.Label();
             this.domainUpDown_BindKey = new System.Windows.Forms.DomainUpDown();
@@ -39,7 +39,6 @@
             this.checkBox_Enable = new System.Windows.Forms.CheckBox();
             this.label_GoldCounter = new System.Windows.Forms.Label();
             this.button_IsWorking = new System.Windows.Forms.Button();
-            this.button_OpenScripts = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label_GoldMax = new System.Windows.Forms.Label();
             this.textBox_GoldMax = new System.Windows.Forms.TextBox();
@@ -138,16 +137,6 @@
             this.button_IsWorking.UseVisualStyleBackColor = true;
             this.button_IsWorking.Click += new System.EventHandler(this.button_IsWorking_Click);
             // 
-            // button_OpenScripts
-            // 
-            this.button_OpenScripts.Location = new System.Drawing.Point(166, 31);
-            this.button_OpenScripts.Name = "button_OpenScripts";
-            this.button_OpenScripts.Size = new System.Drawing.Size(75, 23);
-            this.button_OpenScripts.TabIndex = 10;
-            this.button_OpenScripts.Text = "Скрипты";
-            this.button_OpenScripts.UseVisualStyleBackColor = true;
-            this.button_OpenScripts.Click += new System.EventHandler(this.button_OpenScripts_Click);
-            // 
             // notifyIcon1
             // 
             this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -175,15 +164,14 @@
             this.textBox_GoldMax.TabIndex = 12;
             this.textBox_GoldMax.Text = "90000";
             // 
-            // Form1
+            // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(271, 168);
+            this.ClientSize = new System.Drawing.Size(284, 191);
             this.Controls.Add(this.textBox_GoldMax);
             this.Controls.Add(this.label_GoldMax);
-            this.Controls.Add(this.button_OpenScripts);
             this.Controls.Add(this.button_IsWorking);
             this.Controls.Add(this.label_GoldCounter);
             this.Controls.Add(this.checkBox_Enable);
@@ -194,11 +182,12 @@
             this.Controls.Add(this.label_BindKey);
             this.Controls.Add(this.label_Gold);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(220, 200);
-            this.Name = "Form1";
+            this.MinimumSize = new System.Drawing.Size(300, 230);
+            this.Name = "Form_Main";
             this.Text = "RDA-Clicker";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Main_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.ResizeBegin += new System.EventHandler(this.Form1_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -215,7 +204,6 @@
         private System.Windows.Forms.CheckBox checkBox_Enable;
         private System.Windows.Forms.Label label_GoldCounter;
         private System.Windows.Forms.Button button_IsWorking;
-        private System.Windows.Forms.Button button_OpenScripts;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label_GoldMax;
         private System.Windows.Forms.TextBox textBox_GoldMax;

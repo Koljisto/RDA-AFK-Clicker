@@ -15,7 +15,7 @@ using System.Drawing;
 
 namespace RDA_AFK_Clicker
 {
-    public partial class Form1 : Form
+    public partial class Form_Main : Form
     {
         //const int WM_CHAR = 0x71;
         //const int WM_SYSKEYDOWN = 0x0104;
@@ -50,23 +50,24 @@ namespace RDA_AFK_Clicker
         private static extern int SetFocus(IntPtr hwnd);
         [DllImport("user32.dll")]
         private static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);
-
-        //private NotifyIcon notifyIcon1 = new NotifyIcon();
-        //notifyIcon1.Icon = Properties.Resources.Main_Icon;
         InputSimulator sim = new InputSimulator();
-        //System.Windows.Forms.Timer TickTimer = new System.Windows.Forms.Timer();
         Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         Regex reg = new Regex(@"dota 2 beta");
         Regex reg_final = new Regex(@"dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
         VirtualKeyCode selectedKeyCode;
-        //AutoHotkeyEngine ahk = AutoHotkeyEngine.Instance;
-        public Form1()
+        public Form_Main()
         {
             InitializeComponent();
         }
         GameStateListener gsl;
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Menu = new MainMenu();
+            MenuItem item = new MenuItem("Меню");
+            this.Menu.MenuItems.Add(item);
+            item.MenuItems.Add("Скрипты", new EventHandler(OpenScripts_Menu));
+            item.MenuItems.Add("О программе", new EventHandler(AboutProgram_Menu));
+            //item.MenuItems.Add("Open", new EventHandler(Open_Click));
             switch (config.AppSettings.Settings["bind_key"].Value)
             {
                 case "F1":
@@ -108,6 +109,7 @@ namespace RDA_AFK_Clicker
                 default:
                     break;
             }
+            textBox_GoldMax.Text = config.AppSettings.Settings["gold_max"].Value;
             label_Status.Text = "Ожидаю...";
             gsl = new GameStateListener(4000);
             gsl.NewGameState += new NewGameStateHandler(OnNewGameState);
@@ -130,7 +132,7 @@ namespace RDA_AFK_Clicker
                     label_Status.Text = "В работе.";
                     //SendMessage(WindowToFind, WM_KEYDOWN, (IntPtr)WM_CHAR, (UIntPtr)0x00410001);
                     //SendMessage(WindowToFind, WM_KEYUP, (IntPtr)WM_CHAR, (UIntPtr)0xC0410001);
-                    if (gs.Player.Gold >= 90000)
+                    if (gs.Player.Gold >= Int32.Parse(config.AppSettings.Settings["gold_max"].Value))
                     {
                         IntPtr tmp = GetForegroundWindow();
                         IntPtr tmpThread = GetWindowThreadProcessId(tmp, IntPtr.Zero);
@@ -144,6 +146,7 @@ namespace RDA_AFK_Clicker
                             AttachThreadInput(tmpThread, WindowToFindThread, true);
                             AttachThreadInput(WindowToFindThread, tmpThread, false);
                             SetFocus(WindowToFind);
+                            System.Threading.Thread.Sleep(100);
                             sim.Keyboard.KeyUp(VirtualKeyCode.LMENU);
                             sim.Keyboard.KeyPress(selectedKeyCode);
                             SetFocus(tmp);
@@ -164,7 +167,7 @@ namespace RDA_AFK_Clicker
 
         private void button_Save_Click(object sender, EventArgs e)
         {
-            if(domainUpDown_BindKey.SelectedItem.ToString().Length == 2 && Int32.Parse(textBox_GoldMax.ToString()) > 0)
+            if(domainUpDown_BindKey.SelectedItem.ToString().Length == 2 && Int32.Parse(textBox_GoldMax.Text) > 0)
             {
                 switch (domainUpDown_BindKey.SelectedItem.ToString())
                 {
@@ -208,9 +211,10 @@ namespace RDA_AFK_Clicker
                         MessageBox.Show("Введён неверный бинд клавиши. Восстановлена последняя успешная");
                         break;
                 }
-                config.AppSettings.Settings["gold_max"].Value = textBox_GoldMax.ToString();
+                config.AppSettings.Settings["gold_max"].Value = textBox_GoldMax.Text;
                 config.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
+                label_Status.Text = "Сохранено!";
             } else
             {
                 MessageBox.Show("Введены неверные параметры");
@@ -273,10 +277,15 @@ namespace RDA_AFK_Clicker
             }
         }
 
-        private void button_OpenScripts_Click(object sender, EventArgs e)
+        private void OpenScripts_Menu(object sender, EventArgs e)
         {
-            MessageBox.Show("Скрипты");
-            //SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            Form_Scripts form2 = new Form_Scripts();
+            form2.Show();
+        }
+        private void AboutProgram_Menu(object sender, EventArgs e)
+        {
+            Form_About form3 = new Form_About();
+            form3.Show();
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -286,7 +295,7 @@ namespace RDA_AFK_Clicker
             WindowState = FormWindowState.Normal;
         }
 
-        private void Form1_ResizeBegin(object sender, EventArgs e)
+        private void Form1_ResizeEnd(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
             {
@@ -294,6 +303,12 @@ namespace RDA_AFK_Clicker
                 notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(1000);
             }
+        }
+
+        private void Form_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            notifyIcon1.Icon.Dispose();
+            notifyIcon1.Dispose();
         }
     }
 }
