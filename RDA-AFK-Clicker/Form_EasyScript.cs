@@ -69,6 +69,7 @@ namespace RDA_AFK_Clicker
         {
             if(listBox_Commands.SelectedIndex == -1) { return; }
             listBox_Commands.Items[listBox_Commands.SelectedIndex] = domainUpDown_Command.SelectedItem.ToString() + ";" + textBox_Param.Text;
+            //default header for script
             string tmp_Script = File.ReadAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\SystemScripts\\base_include.ahk");
             foreach (object item in listBox_Commands.Items)
             {
@@ -89,23 +90,27 @@ namespace RDA_AFK_Clicker
                         break;
                 }
             }
+            //add tail in script
             tmp_Script += "}\n" +
                 "^s:: ExitApp\n" +
                 "loop:=0\n" +
                 "ExitApp\n" +
                 "return\n";
             //MessageBox.Show(tmp_Script);
+            //save as new script
             File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\\" + script_Name, tmp_Script);
             //MessageBox.Show(tmp);
         }
 
         private void button_AddCommandClick(object sender, EventArgs e)
         {
+            //if list is empty or not selected then create new item on top list
             if (listBox_Commands.SelectedIndex == -1)
             {
                 listBox_Commands.Items.Add("Новая команда");
                 return;
             }
+            //if index equal 0 need create new item down else create on current index
             if(listBox_Commands.SelectedIndex == 0)
                 listBox_Commands.Items.Insert(listBox_Commands.SelectedIndex + 1, "Новая команда");
             else
@@ -120,17 +125,20 @@ namespace RDA_AFK_Clicker
 
         private void checkBox_HookMouseCheckedChanged(object sender, EventArgs e)
         {
+            //if hook checkbox is true then start ahk with mouse pos
             if (checkBox_HookMouse.Checked)
             {
                 AutoHotkeyEngine ahk = new AutoHotkeyEngine();
                 ahk.LoadFile(Path.GetDirectoryName(Application.ExecutablePath) + "\\SystemScripts\\mousepos.ahk");
                 checkBox_HookMouse.Enabled = false;
+                checkBox_HookMouse.Checked = false;
             }
         }
 
         private void listBox_Commands_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(listBox_Commands.SelectedIndex == -1) { return; }
+            //get listbox item and put it in regex for convert it in params
             var matchAll = reg_command.Matches(listBox_Commands.SelectedItem.ToString());
             if (matchAll[0].Success)
                 switch (matchAll[0].ToString())

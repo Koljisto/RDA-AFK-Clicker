@@ -68,6 +68,7 @@ namespace RDA_AFK_Clicker
             item.MenuItems.Add("Скрипты", new EventHandler(OpenScripts_Menu));
             item.MenuItems.Add("О программе", new EventHandler(AboutProgram_Menu));
             //item.MenuItems.Add("Open", new EventHandler(Open_Click));
+            //kostili
             switch (config.AppSettings.Settings["bind_key"].Value)
             {
                 case "F1":
@@ -115,6 +116,7 @@ namespace RDA_AFK_Clicker
             gsl.NewGameState += new NewGameStateHandler(OnNewGameState);
             if (!gsl.Start())
             {
+                //this not calling, but make save run
                 MessageBox.Show("Пробуй запустить от администратора и проверь наличие конфига в Dota 2.\nЗакрываю.");
                 Environment.Exit(0);
             }
@@ -137,6 +139,7 @@ namespace RDA_AFK_Clicker
                         IntPtr tmp = GetForegroundWindow();
                         IntPtr tmpThread = GetWindowThreadProcessId(tmp, IntPtr.Zero);
                         IntPtr WindowToFindThread = GetWindowThreadProcessId(WindowToFind, IntPtr.Zero);
+                        //if dota in active window
                         if(tmp == WindowToFind)
                         {
                             sim.Keyboard.KeyUp(VirtualKeyCode.LMENU);
@@ -146,7 +149,9 @@ namespace RDA_AFK_Clicker
                             AttachThreadInput(tmpThread, WindowToFindThread, true);
                             AttachThreadInput(WindowToFindThread, tmpThread, false);
                             SetFocus(WindowToFind);
+                            //make sure if works need 100 ms delay
                             System.Threading.Thread.Sleep(100);
+                            //keyup system key LAlt
                             sim.Keyboard.KeyUp(VirtualKeyCode.LMENU);
                             sim.Keyboard.KeyPress(selectedKeyCode);
                             SetFocus(tmp);
