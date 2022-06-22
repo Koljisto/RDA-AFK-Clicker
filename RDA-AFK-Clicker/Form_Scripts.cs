@@ -98,7 +98,7 @@ namespace RDA_AFK_Clicker
         {
             string value = "";
             InputBox("Создание скрипта", "Введите название скрипта", ref value);
-            File.Create("Scripts\\" + value + ".ahk").Close();
+            File.Create(Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\\" + value + ".ahk").Close();
             UpdateScripts();
         }
         private void button_DeleteScriptClick(object sender, EventArgs e)

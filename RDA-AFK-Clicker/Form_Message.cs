@@ -22,9 +22,10 @@ namespace RDA_AFK_Clicker
 
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-        private const int WS_EX_LAYERED = 0x00080000;
-        private const int WS_EX_TRANSPARENT = 0x20;
-        private const int GWL_EXSTYLE = -20;
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_LAYERED = 0x80000;
+        public const int LWA_ALPHA = 0x2;
+        public const int LWA_COLORKEY = 0x1;
         string message_;
         public Form_Message(string message)
         {
@@ -35,11 +36,13 @@ namespace RDA_AFK_Clicker
         private void Form_Message_Load(object sender, EventArgs e)
         {
             label1.Text = message_;
-            //handle = IntPtr.Zero;
-            int winFlags = GetWindowLong(IntPtr.Zero, GWL_EXSTYLE);
-            winFlags |= WS_EX_LAYERED;
-            winFlags |= WS_EX_TRANSPARENT;
-            SetWindowLong(this.Handle, GWL_EXSTYLE, winFlags);
+            this.TopLevel = true;
+            this.TopMost = true;
+            //int winFlags = GetWindowLong(IntPtr.Zero, GWL_EXSTYLE);
+            //winFlags |= WS_EX_LAYERED;
+            //winFlags |= WS_EX_TRANSPARENT;
+            SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+            SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA);
         }
     }
 }

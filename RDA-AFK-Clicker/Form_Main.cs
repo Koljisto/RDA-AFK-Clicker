@@ -65,7 +65,7 @@ namespace RDA_AFK_Clicker
         Regex reg = new Regex(@"dota 2 beta");
         Regex reg_final = new Regex(@"dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
         VirtualKeyCode selectedKeyCode;
-        Form_Message form_message;
+        Form_Message form_message = new Form_Message("Aboba");
         public Form_Main()
         {
             InitializeComponent();
@@ -73,6 +73,8 @@ namespace RDA_AFK_Clicker
         GameStateListener gsl;
         private void Form_Main_Load(object sender, EventArgs e)
         {
+            //form_message = new Form_Message("Test");
+            
             this.Menu = new MainMenu();
             MenuItem item = new MenuItem("Меню");
             this.Menu.MenuItems.Add(item);
@@ -180,14 +182,23 @@ namespace RDA_AFK_Clicker
             }
             if (checkBox_Helper.Checked)
             {
-                if(gs.Hero.Name.ToString() == "npc_dota_hero_treant")
+                label_HeroName.Text = gs.Abilities[1].Cooldown.ToString();
+                if (gs.Hero.Name.ToString() == "npc_dota_hero_treant")
                 {
-                    if(gs.Abilities[1].Cooldown == 1)
+                    //form_message = new Form_Message("Test");
+                    if (gs.Abilities[1].Cooldown == 0)
                     {
-                        form_message = new Form_Message("Прожми дерево!");
-                    } else
+                        if (!form_message.IsHandleCreated)
+                        {
+                            form_message.Close();
+                            form_message = new Form_Message("Прожми дерево!");
+                            form_message.Show();
+                        }
+                    }
+                    else
                     {
-                        form_message.Close();
+                        if (form_message.IsHandleCreated)
+                            form_message.Close();
                     }
                 }
                 //label_HeroName.Text = gs.Hero.Name.ToString();

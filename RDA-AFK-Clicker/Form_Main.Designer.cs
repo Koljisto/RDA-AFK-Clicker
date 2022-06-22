@@ -50,18 +50,20 @@
             // label_Gold
             // 
             this.label_Gold.AutoSize = true;
-            this.label_Gold.Location = new System.Drawing.Point(12, 52);
+            this.label_Gold.Location = new System.Drawing.Point(16, 64);
+            this.label_Gold.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_Gold.Name = "label_Gold";
-            this.label_Gold.Size = new System.Drawing.Size(46, 13);
+            this.label_Gold.Size = new System.Drawing.Size(58, 16);
             this.label_Gold.TabIndex = 0;
             this.label_Gold.Text = "Золото:";
             // 
             // label_BindKey
             // 
             this.label_BindKey.AutoSize = true;
-            this.label_BindKey.Location = new System.Drawing.Point(12, 78);
+            this.label_BindKey.Location = new System.Drawing.Point(16, 96);
+            this.label_BindKey.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_BindKey.Name = "label_BindKey";
-            this.label_BindKey.Size = new System.Drawing.Size(55, 13);
+            this.label_BindKey.Size = new System.Drawing.Size(67, 16);
             this.label_BindKey.TabIndex = 0;
             this.label_BindKey.Text = "Клавиша:";
             // 
@@ -76,18 +78,20 @@
             this.domainUpDown_BindKey.Items.Add("F7");
             this.domainUpDown_BindKey.Items.Add("F8");
             this.domainUpDown_BindKey.Items.Add("F10");
-            this.domainUpDown_BindKey.Location = new System.Drawing.Point(73, 76);
+            this.domainUpDown_BindKey.Location = new System.Drawing.Point(97, 94);
+            this.domainUpDown_BindKey.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.domainUpDown_BindKey.Name = "domainUpDown_BindKey";
-            this.domainUpDown_BindKey.Size = new System.Drawing.Size(139, 20);
+            this.domainUpDown_BindKey.Size = new System.Drawing.Size(185, 22);
             this.domainUpDown_BindKey.TabIndex = 2;
             this.domainUpDown_BindKey.Tag = "";
             this.domainUpDown_BindKey.Text = "Выбери бинд";
             // 
             // button_Save
             // 
-            this.button_Save.Location = new System.Drawing.Point(12, 124);
+            this.button_Save.Location = new System.Drawing.Point(16, 153);
+            this.button_Save.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(200, 40);
+            this.button_Save.Size = new System.Drawing.Size(267, 49);
             this.button_Save.TabIndex = 3;
             this.button_Save.Text = "Сохранить";
             this.button_Save.UseVisualStyleBackColor = true;
@@ -96,27 +100,30 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 167);
+            this.label2.Location = new System.Drawing.Point(16, 206);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 13);
+            this.label2.Size = new System.Drawing.Size(56, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Статус:";
             // 
             // label_Status
             // 
             this.label_Status.AutoSize = true;
-            this.label_Status.Location = new System.Drawing.Point(62, 167);
+            this.label_Status.Location = new System.Drawing.Point(83, 206);
+            this.label_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_Status.Name = "label_Status";
-            this.label_Status.Size = new System.Drawing.Size(37, 13);
+            this.label_Status.Size = new System.Drawing.Size(44, 16);
             this.label_Status.TabIndex = 5;
             this.label_Status.Text = "Status";
             // 
             // checkBox_Enable
             // 
             this.checkBox_Enable.AutoSize = true;
-            this.checkBox_Enable.Location = new System.Drawing.Point(12, 12);
+            this.checkBox_Enable.Location = new System.Drawing.Point(16, 15);
+            this.checkBox_Enable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox_Enable.Name = "checkBox_Enable";
-            this.checkBox_Enable.Size = new System.Drawing.Size(75, 17);
+            this.checkBox_Enable.Size = new System.Drawing.Size(93, 20);
             this.checkBox_Enable.TabIndex = 6;
             this.checkBox_Enable.Text = "Включить";
             this.checkBox_Enable.UseVisualStyleBackColor = true;
@@ -124,17 +131,19 @@
             // label_GoldCounter
             // 
             this.label_GoldCounter.AutoSize = true;
-            this.label_GoldCounter.Location = new System.Drawing.Point(74, 52);
+            this.label_GoldCounter.Location = new System.Drawing.Point(99, 64);
+            this.label_GoldCounter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_GoldCounter.Name = "label_GoldCounter";
-            this.label_GoldCounter.Size = new System.Drawing.Size(13, 13);
+            this.label_GoldCounter.Size = new System.Drawing.Size(14, 16);
             this.label_GoldCounter.TabIndex = 7;
             this.label_GoldCounter.Text = "0";
             // 
             // button_IsWorking
             // 
-            this.button_IsWorking.Location = new System.Drawing.Point(137, 22);
+            this.button_IsWorking.Location = new System.Drawing.Point(183, 27);
+            this.button_IsWorking.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button_IsWorking.Name = "button_IsWorking";
-            this.button_IsWorking.Size = new System.Drawing.Size(75, 23);
+            this.button_IsWorking.Size = new System.Drawing.Size(100, 28);
             this.button_IsWorking.TabIndex = 9;
             this.button_IsWorking.Text = "Проверка";
             this.button_IsWorking.UseVisualStyleBackColor = true;
@@ -153,26 +162,29 @@
             // label_GoldMax
             // 
             this.label_GoldMax.AutoSize = true;
-            this.label_GoldMax.Location = new System.Drawing.Point(12, 105);
+            this.label_GoldMax.Location = new System.Drawing.Point(16, 129);
+            this.label_GoldMax.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_GoldMax.Name = "label_GoldMax";
-            this.label_GoldMax.Size = new System.Drawing.Size(84, 13);
+            this.label_GoldMax.Size = new System.Drawing.Size(104, 16);
             this.label_GoldMax.TabIndex = 11;
             this.label_GoldMax.Text = "Лимит золота: ";
             // 
             // textBox_GoldMax
             // 
-            this.textBox_GoldMax.Location = new System.Drawing.Point(102, 102);
+            this.textBox_GoldMax.Location = new System.Drawing.Point(136, 126);
+            this.textBox_GoldMax.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox_GoldMax.Name = "textBox_GoldMax";
-            this.textBox_GoldMax.Size = new System.Drawing.Size(100, 20);
+            this.textBox_GoldMax.Size = new System.Drawing.Size(132, 22);
             this.textBox_GoldMax.TabIndex = 12;
             this.textBox_GoldMax.Text = "90000";
             // 
             // checkBox_Helper
             // 
             this.checkBox_Helper.AutoSize = true;
-            this.checkBox_Helper.Location = new System.Drawing.Point(12, 32);
+            this.checkBox_Helper.Location = new System.Drawing.Point(16, 39);
+            this.checkBox_Helper.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox_Helper.Name = "checkBox_Helper";
-            this.checkBox_Helper.Size = new System.Drawing.Size(81, 17);
+            this.checkBox_Helper.Size = new System.Drawing.Size(96, 20);
             this.checkBox_Helper.TabIndex = 13;
             this.checkBox_Helper.Text = "Помощник";
             this.checkBox_Helper.UseVisualStyleBackColor = true;
@@ -180,27 +192,29 @@
             // label_HeroNameText
             // 
             this.label_HeroNameText.AutoSize = true;
-            this.label_HeroNameText.Location = new System.Drawing.Point(111, 52);
+            this.label_HeroNameText.Location = new System.Drawing.Point(148, 64);
+            this.label_HeroNameText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_HeroNameText.Name = "label_HeroNameText";
-            this.label_HeroNameText.Size = new System.Drawing.Size(40, 13);
+            this.label_HeroNameText.Size = new System.Drawing.Size(49, 16);
             this.label_HeroNameText.TabIndex = 14;
             this.label_HeroNameText.Text = "Герой:";
             // 
             // label_HeroName
             // 
             this.label_HeroName.AutoSize = true;
-            this.label_HeroName.Location = new System.Drawing.Point(151, 52);
+            this.label_HeroName.Location = new System.Drawing.Point(201, 64);
+            this.label_HeroName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_HeroName.Name = "label_HeroName";
-            this.label_HeroName.Size = new System.Drawing.Size(61, 13);
+            this.label_HeroName.Size = new System.Drawing.Size(73, 16);
             this.label_HeroName.TabIndex = 15;
             this.label_HeroName.Text = "Имя героя";
             // 
             // Form_Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(284, 191);
+            this.ClientSize = new System.Drawing.Size(342, 253);
             this.Controls.Add(this.label_HeroName);
             this.Controls.Add(this.label_HeroNameText);
             this.Controls.Add(this.checkBox_Helper);
@@ -216,7 +230,8 @@
             this.Controls.Add(this.label_BindKey);
             this.Controls.Add(this.label_Gold);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(300, 230);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MinimumSize = new System.Drawing.Size(360, 300);
             this.Name = "Form_Main";
             this.Text = "RDA-Clicker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Main_FormClosing);
