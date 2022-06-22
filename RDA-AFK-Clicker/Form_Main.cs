@@ -50,17 +50,28 @@ namespace RDA_AFK_Clicker
         private static extern int SetFocus(IntPtr hwnd);
         [DllImport("user32.dll")]
         private static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        private const int WS_EX_LAYERED = 0x00080000;
+        private const int WS_EX_TRANSPARENT = 0x20;
+        private const int GWL_EXSTYLE = -20;
         InputSimulator sim = new InputSimulator();
         Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         Regex reg = new Regex(@"dota 2 beta");
         Regex reg_final = new Regex(@"dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
         VirtualKeyCode selectedKeyCode;
+        Form_Message form_message;
         public Form_Main()
         {
             InitializeComponent();
         }
         GameStateListener gsl;
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form_Main_Load(object sender, EventArgs e)
         {
             this.Menu = new MainMenu();
             MenuItem item = new MenuItem("Меню");
@@ -121,7 +132,6 @@ namespace RDA_AFK_Clicker
                 Environment.Exit(0);
             }
         }
-
         void OnNewGameState(GameState gs)
         {
             label_GoldCounter.Text = gs.Player.Gold.ToString();
@@ -167,6 +177,21 @@ namespace RDA_AFK_Clicker
             } else
             {
                 label_Status.Text = "Остановлен.";
+            }
+            if (checkBox_Helper.Checked)
+            {
+                if(gs.Hero.Name.ToString() == "npc_dota_hero_treant")
+                {
+                    if(gs.Abilities[1].Cooldown == 1)
+                    {
+                        form_message = new Form_Message("Прожми дерево!");
+                    } else
+                    {
+                        form_message.Close();
+                    }
+                }
+                //label_HeroName.Text = gs.Hero.Name.ToString();
+                //label_HeroName.Text = gs.Abilities[1].Cooldown.ToString();
             }
         }
 
@@ -284,13 +309,13 @@ namespace RDA_AFK_Clicker
 
         private void OpenScripts_Menu(object sender, EventArgs e)
         {
-            Form_Scripts form2 = new Form_Scripts();
-            form2.Show();
+            Form_Scripts form_scripts = new Form_Scripts();
+            form_scripts.Show();
         }
         private void AboutProgram_Menu(object sender, EventArgs e)
         {
-            Form_About form3 = new Form_About();
-            form3.Show();
+            Form_About form_about = new Form_About();
+            form_about.Show();
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -300,7 +325,7 @@ namespace RDA_AFK_Clicker
             WindowState = FormWindowState.Normal;
         }
 
-        private void Form1_ResizeEnd(object sender, EventArgs e)
+        private void Form_Main_ResizeEnd(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
             {

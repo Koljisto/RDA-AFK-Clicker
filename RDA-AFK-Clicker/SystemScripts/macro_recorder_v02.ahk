@@ -129,6 +129,7 @@ while(recording = true)
 			), %mydir%\%myfilename%
 		
 	}
+	
 	if(GetKeyState("F", "P"))
 	{
 	  	FileAppend, 
