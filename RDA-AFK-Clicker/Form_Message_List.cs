@@ -9,12 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
-
 namespace RDA_AFK_Clicker
 {
-    public partial class Form_Message : Form
+    public partial class Form_Message_List : Form
     {
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
         [DllImport("user32.dll", SetLastError = true)]
@@ -26,22 +25,32 @@ namespace RDA_AFK_Clicker
         public const int WS_EX_LAYERED = 0x80000;
         public const int LWA_ALPHA = 0x2;
         public const int LWA_COLORKEY = 0x1;
-        string message_;
-        public Form_Message(string message)
+        List<string> main_str;
+        public Form_Message_List(List<string> str)
         {
+            main_str = str;
             InitializeComponent();
-            message_ = message;
         }
-        private void Form_Message_Load(object sender, EventArgs e)
+
+        private void Form_Message_List_Load(object sender, EventArgs e)
         {
-            label1.Text = message_;
             this.TopLevel = true;
             this.TopMost = true;
-            //int winFlags = GetWindowLong(IntPtr.Zero, GWL_EXSTYLE);
-            //winFlags |= WS_EX_LAYERED;
-            //winFlags |= WS_EX_TRANSPARENT;
+
             SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
             SetLayeredWindowAttributes(Handle, 0, 255, LWA_ALPHA);
+            foreach (string str in main_str)
+            {
+                listBox_WavesInfo.Items.Add(str);
+            }
+        }
+
+        private void Update_List_Info(int minute)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace RDA_AFK_Clicker
 {
-    partial class Form_Message
+    partial class Form_Message_List
     {
         /// <summary>
         /// Required designer variable.
@@ -28,46 +28,42 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Message_List));
+            this.listBox_WavesInfo = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
-            // label1
+            // listBox_WavesInfo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(-3, -2);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(159, 58);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.listBox_WavesInfo.Enabled = false;
+            this.listBox_WavesInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox_WavesInfo.FormattingEnabled = true;
+            this.listBox_WavesInfo.ItemHeight = 29;
+            this.listBox_WavesInfo.Location = new System.Drawing.Point(13, 13);
+            this.listBox_WavesInfo.Name = "listBox_WavesInfo";
+            this.listBox_WavesInfo.Size = new System.Drawing.Size(157, 323);
+            this.listBox_WavesInfo.TabIndex = 0;
             // 
-            // Form_Message
+            // Form_Message_List
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Info;
-            this.ClientSize = new System.Drawing.Size(144, 46);
+            this.ClientSize = new System.Drawing.Size(178, 338);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
-            this.Enabled = false;
-            this.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.Controls.Add(this.listBox_WavesInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "Form_Message";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "Form_Message_List";
             this.Opacity = 0.5D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Load += new System.EventHandler(this.Form_Message_Load);
+            this.Load += new System.EventHandler(this.Form_Message_List_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox listBox_WavesInfo;
     }
 }

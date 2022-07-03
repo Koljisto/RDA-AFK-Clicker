@@ -65,10 +65,23 @@ namespace RDA_AFK_Clicker
         Regex reg = new Regex(@"dota 2 beta");
         Regex reg_final = new Regex(@"dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
         VirtualKeyCode selectedKeyCode;
-        Form_Message form_message = new Form_Message("Aboba");
+        int game_minutes;
+        int game_seconds;
+        Form_Message form_message = new Form_Message(" ");
+        Form_Message form_message2 = new Form_Message(" ");
+        Form_Message form_message3 = new Form_Message(" ");
+        Form_Message_List form_message4 = new Form_Message_List(new List<string>());
+        System.Windows.Forms.Timer timer_ClearNotify = new System.Windows.Forms.Timer();
+        System.Windows.Forms.Timer timer_ClearWave = new System.Windows.Forms.Timer();
+        System.Windows.Forms.Timer timer_ClearWavesList = new System.Windows.Forms.Timer();
         public Form_Main()
         {
             InitializeComponent();
+            timer_ClearNotify.Interval = 4000;
+            timer_ClearWave.Interval = 50000;
+            timer_ClearWavesList.Interval = 60000;
+            //timer_Clear.Enabled = true;
+
         }
         GameStateListener gsl;
         private void Form_Main_Load(object sender, EventArgs e)
@@ -129,14 +142,27 @@ namespace RDA_AFK_Clicker
             gsl.NewGameState += new NewGameStateHandler(OnNewGameState);
             if (!gsl.Start())
             {
-                //this not calling, but make save run
-                MessageBox.Show("Пробуй запустить от администратора и проверь наличие конфига в Dota 2.\nЗакрываю.");
-                Environment.Exit(0);
+                //make save run
+                MessageBox.Show("Пробуй запустить от администратора и проверь наличие конфига в Dota 2 (кнопка проверка) и после перезапусти кликер.");
             }
         }
         void OnNewGameState(GameState gs)
         {
+            if(game_minutes != gs.Map.ClockTime / 60)
+            {
+                game_minutes = gs.Map.ClockTime / 60;
+                form_message.Close();
+                form_message2.Close();
+                form_message3.Close();
+                form_message4.Close();
+                //tick game minute funcs
+                if (checkBox_MidListWaves.Checked)
+                    UpdateWavesList();
+            }
+            game_seconds = gs.Map.ClockTime % 60;
             label_GoldCounter.Text = gs.Player.Gold.ToString();
+            label_GameTime.Text = game_minutes.ToString()+":"+game_seconds.ToString();
+            //label_GameTime.Text = gs.Map.GameTime.ToString();
             if (checkBox_Enable.Checked)
             {
                 IntPtr WindowToFind = FindWindow(null, "Dota 2");
@@ -178,14 +204,13 @@ namespace RDA_AFK_Clicker
                 }
             } else
             {
-                label_Status.Text = "Остановлен.";
+                label_Status.Text = "Не включен.";
             }
             if (checkBox_Helper.Checked)
             {
-                label_HeroName.Text = gs.Abilities[1].Cooldown.ToString();
                 if (gs.Hero.Name.ToString() == "npc_dota_hero_treant")
                 {
-                    //form_message = new Form_Message("Test");
+                    label_Cooldown.Text = gs.Abilities[1].Cooldown.ToString();
                     if (gs.Abilities[1].Cooldown == 0)
                     {
                         if (!form_message.IsHandleCreated)
@@ -201,11 +226,183 @@ namespace RDA_AFK_Clicker
                             form_message.Close();
                     }
                 }
-                //label_HeroName.Text = gs.Hero.Name.ToString();
+                if (gs.Hero.Name.ToString() == "npc_dota_hero_tinker")
+                {
+                    //gs.Abilities.Count.ToString();
+                    label_Cooldown.Text = gs.Abilities[4].Cooldown.ToString();
+                    //form_message = new Form_Message("Test");
+                    if (gs.Abilities[4].Cooldown == 0)
+                    {
+                        if (!form_message.IsHandleCreated)
+                        {
+                            form_message.Close();
+                            form_message = new Form_Message("Улучши башню!");
+                            form_message.Show();
+                        }
+                    }
+                    else
+                    {
+                        if (form_message.IsHandleCreated)
+                            form_message.Close();
+                    }
+                }
+                //label_Cooldown.Text = gs.Hero.Name.ToString();
                 //label_HeroName.Text = gs.Abilities[1].Cooldown.ToString();
+            }
+            if (checkBox_MidHelper.Checked)
+            {
+                label_Minutes.Text = (game_minutes % 5).ToString();
+                if (checkBox_MidHelperNotify1.Checked && (game_seconds >= 10) && (game_seconds <= 12))
+                {
+                    if (!form_message2.IsHandleCreated)
+                    {
+                        form_message2.Close();
+                        form_message2 = new Form_Message("Первая башня!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 500)
+                        };
+                        form_message2.Show();
+                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
+                        timer_ClearNotify.Start();
+                    }
+                }
+                if (checkBox_MidHelperNotify2.Checked && (game_seconds >= 23) && (game_seconds <= 25))
+                {
+                    if (!form_message2.IsHandleCreated)
+                    {
+                        form_message2.Close();
+                        form_message2 = new Form_Message("Вторая башня!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 500)
+                        };
+                        form_message2.Show();
+                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
+                        timer_ClearNotify.Start();
+                    }
+                }
+                if (checkBox_MidHelperNotify3.Checked && (game_seconds >= 31) && (game_seconds <= 33))
+                {
+                    if (!form_message2.IsHandleCreated)
+                    {
+                        form_message2.Close();
+                        form_message2 = new Form_Message("Третья башня!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 500)
+                        };
+                        form_message2.Show();
+                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
+                        timer_ClearNotify.Start();
+                    }
+                }
+                if(checkBox_MidOnlyBosses.Checked && (game_minutes % 5 == 0))
+                {
+                    if (!form_message3.IsHandleCreated)
+                    {
+                        form_message3.Close();
+                        form_message3 = new Form_Message("БОСС!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 400)
+                        };
+                        //form_message3 = new Form_Message("Крипы!");
+                        form_message3.Show();
+                        // timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
+                        // timer_ClearWave.Start();
+                    }
+                }
+                if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 != 0))
+                {
+                    if (!form_message3.IsHandleCreated)
+                    {
+                        form_message3.Close();
+                        form_message3 = new Form_Message("Крипы!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 400)
+                        };
+                        form_message3.Show();
+                        // timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
+                        // timer_ClearWave.Start();
+                    }
+                }
+                if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 == 0))
+                {
+                    if (!form_message3.IsHandleCreated)
+                    {
+                        form_message3.Close();
+                        form_message3 = new Form_Message("Free time!")
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(60, 400)
+                        };
+                        form_message3.Show();
+                        timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
+                        timer_ClearWave.Start();
+                    }
+                }
+                if (checkBox_MidListWaves.Checked)
+                {
+                    if (!form_message4.IsHandleCreated)
+                    {
+                        UpdateWavesList();
+                    }
+                }
             }
         }
 
+        private void UpdateWavesList()
+        {
+            List<string> tmp_list = new List<string>();
+            for (int i = 0; i < 6; i++)
+            {
+                // tmp_list.Add((gs.Map.ClockTime / 60 % 5).ToString() + " - Босс");
+                if ((game_minutes + i) % 5 == 0)
+                {
+                    tmp_list.Add((game_minutes + i).ToString() + " - Босс");
+                }
+                else if((game_minutes + i) % 6 == 0)
+                {
+                    tmp_list.Add((game_minutes + i).ToString() + " - Free");
+                }
+                else
+                {
+                    tmp_list.Add((game_minutes + i).ToString() + " - Крипы");
+                }
+            }
+            form_message4 = new Form_Message_List(tmp_list)
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(60, 60)
+            };
+            form_message4.Show();
+            // timer_ClearWavesList.Tick += new EventHandler(ClearWavesListFormMessage);
+            // timer_ClearWavesList.Start();
+        }
+
+        private void ClearNotifyFormMessage(object sender, EventArgs e)
+        {
+            if(form_message2.IsHandleCreated)
+                form_message2.Close();
+            timer_ClearNotify.Tick -= new EventHandler(ClearNotifyFormMessage);
+            timer_ClearNotify.Stop();
+        }
+        private void ClearWaveFormMessage(object sender, EventArgs e)
+        {
+            if (form_message3.IsHandleCreated)
+                form_message3.Close();
+            timer_ClearWave.Tick -= new EventHandler(ClearWaveFormMessage);
+            timer_ClearWave.Stop();
+        }
+        private void ClearWavesListFormMessage(object sender, EventArgs e)
+        {
+            if (form_message4.IsHandleCreated)
+                form_message4.Close();
+            timer_ClearWavesList.Tick -= new EventHandler(ClearWavesListFormMessage);
+            timer_ClearWavesList.Stop();
+        }
         private void button_Save_Click(object sender, EventArgs e)
         {
             if(domainUpDown_BindKey.SelectedItem.ToString().Length == 2 && Int32.Parse(textBox_GoldMax.Text) > 0)
@@ -261,14 +458,12 @@ namespace RDA_AFK_Clicker
                 MessageBox.Show("Введены неверные параметры");
             }
         }
-
         private void button_ShowMessage_Click(object sender, EventArgs e)
         {
             MessageBox.Show("По пути: steamapps\\common\\dota 2 beta\\game\\dota\\cfg необходимо создать папку gamestate_integration \n" +
                 "Чтобы путь получился: steamapps\\common\\dota 2 beta\\game\\dota\\cfg\\gamestate_integration\n" +
                 "В эту папку скопировать файл, данный в архиве\n");
         }
-
         private void button_IsWorking_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Укажите путь до папки игры Dota 2");
@@ -317,7 +512,6 @@ namespace RDA_AFK_Clicker
                 }
             }
         }
-
         private void OpenScripts_Menu(object sender, EventArgs e)
         {
             Form_Scripts form_scripts = new Form_Scripts();
@@ -328,14 +522,12 @@ namespace RDA_AFK_Clicker
             Form_About form_about = new Form_About();
             form_about.Show();
         }
-
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ShowInTaskbar = true;
             notifyIcon1.Visible = false;
             WindowState = FormWindowState.Normal;
         }
-
         private void Form_Main_ResizeEnd(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
@@ -345,11 +537,19 @@ namespace RDA_AFK_Clicker
                 notifyIcon1.ShowBalloonTip(1000);
             }
         }
-
         private void Form_Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             notifyIcon1.Icon.Dispose();
             notifyIcon1.Dispose();
+            gsl.Stop();
+            gsl.Dispose();
+        }
+        private void checkBox_MidListWaves_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_MidListWaves.Checked)
+            {
+                form_message4.Close();
+            }
         }
     }
 }
