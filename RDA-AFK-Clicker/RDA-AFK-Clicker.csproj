@@ -83,18 +83,6 @@
     <Compile Include="Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form_Message.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form_Message.Designer.cs">
-      <DependentUpon>Form_Message.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form_Message_List.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form_Message_List.Designer.cs">
-      <DependentUpon>Form_Message_List.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form_Scripts.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,12 +108,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form_Message.resx">
-      <DependentUpon>Form_Message.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form_Message_List.resx">
-      <DependentUpon>Form_Message_List.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Scripts.resx">
       <DependentUpon>Form_Scripts.cs</DependentUpon>

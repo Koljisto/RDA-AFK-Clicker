@@ -12,6 +12,7 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using AutoHotkey.Interop;
 
 namespace RDA_AFK_Clicker
 {
@@ -67,21 +68,10 @@ namespace RDA_AFK_Clicker
         VirtualKeyCode selectedKeyCode;
         int game_minutes;
         int game_seconds;
-        Form_Message form_message = new Form_Message(" ");
-        Form_Message form_message2 = new Form_Message(" ");
-        Form_Message form_message3 = new Form_Message(" ");
-        Form_Message_List form_message4 = new Form_Message_List(new List<string>());
-        System.Windows.Forms.Timer timer_ClearNotify = new System.Windows.Forms.Timer();
-        System.Windows.Forms.Timer timer_ClearWave = new System.Windows.Forms.Timer();
-        System.Windows.Forms.Timer timer_ClearWavesList = new System.Windows.Forms.Timer();
+        AutoHotkeyEngine ahk_helper = new AutoHotkeyEngine();
         public Form_Main()
         {
             InitializeComponent();
-            timer_ClearNotify.Interval = 4000;
-            timer_ClearWave.Interval = 50000;
-            timer_ClearWavesList.Interval = 60000;
-            //timer_Clear.Enabled = true;
-
         }
         GameStateListener gsl;
         private void Form_Main_Load(object sender, EventArgs e)
@@ -151,10 +141,6 @@ namespace RDA_AFK_Clicker
             if(game_minutes != gs.Map.ClockTime / 60)
             {
                 game_minutes = gs.Map.ClockTime / 60;
-                form_message.Close();
-                form_message2.Close();
-                form_message3.Close();
-                form_message4.Close();
                 //tick game minute funcs
                 if (checkBox_MidListWaves.Checked)
                     UpdateWavesList();
@@ -200,7 +186,7 @@ namespace RDA_AFK_Clicker
                 }
                 else
                 {
-                    label_Status.Text = "Нет окна.";
+                    label_Status.Text = "Dota 2 не открыта.";
                 }
             } else
             {
@@ -213,17 +199,13 @@ namespace RDA_AFK_Clicker
                     label_Cooldown.Text = gs.Abilities[1].Cooldown.ToString();
                     if (gs.Abilities[1].Cooldown == 0)
                     {
-                        if (!form_message.IsHandleCreated)
-                        {
-                            form_message.Close();
-                            form_message = new Form_Message("Прожми дерево!");
-                            form_message.Show();
-                        }
+                        //Съешь дерево!
+
                     }
                     else
                     {
-                        if (form_message.IsHandleCreated)
-                            form_message.Close();
+                        //Убрать сообщение
+
                     }
                 }
                 if (gs.Hero.Name.ToString() == "npc_dota_hero_tinker")
@@ -233,122 +215,42 @@ namespace RDA_AFK_Clicker
                     //form_message = new Form_Message("Test");
                     if (gs.Abilities[4].Cooldown == 0)
                     {
-                        if (!form_message.IsHandleCreated)
-                        {
-                            form_message.Close();
-                            form_message = new Form_Message("Улучши башню!");
-                            form_message.Show();
-                        }
+                        //Улучши башню!
+                        
                     }
                     else
                     {
-                        if (form_message.IsHandleCreated)
-                            form_message.Close();
+                        //Убрать текст
+
                     }
                 }
-                //label_Cooldown.Text = gs.Hero.Name.ToString();
-                //label_HeroName.Text = gs.Abilities[1].Cooldown.ToString();
             }
             if (checkBox_MidHelper.Checked)
             {
                 label_Minutes.Text = (game_minutes % 5).ToString();
                 if (checkBox_MidHelperNotify1.Checked && (game_seconds >= 10) && (game_seconds <= 12))
-                {
-                    if (!form_message2.IsHandleCreated)
-                    {
-                        form_message2.Close();
-                        form_message2 = new Form_Message("Первая башня!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 500)
-                        };
-                        form_message2.Show();
-                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
-                        timer_ClearNotify.Start();
-                    }
+                {   
+                    
                 }
                 if (checkBox_MidHelperNotify2.Checked && (game_seconds >= 23) && (game_seconds <= 25))
                 {
-                    if (!form_message2.IsHandleCreated)
-                    {
-                        form_message2.Close();
-                        form_message2 = new Form_Message("Вторая башня!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 500)
-                        };
-                        form_message2.Show();
-                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
-                        timer_ClearNotify.Start();
-                    }
+                   
                 }
                 if (checkBox_MidHelperNotify3.Checked && (game_seconds >= 31) && (game_seconds <= 33))
                 {
-                    if (!form_message2.IsHandleCreated)
-                    {
-                        form_message2.Close();
-                        form_message2 = new Form_Message("Третья башня!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 500)
-                        };
-                        form_message2.Show();
-                        timer_ClearNotify.Tick += new EventHandler(ClearNotifyFormMessage);
-                        timer_ClearNotify.Start();
-                    }
+                    
                 }
                 if(checkBox_MidOnlyBosses.Checked && (game_minutes % 5 == 0))
                 {
-                    if (!form_message3.IsHandleCreated)
-                    {
-                        form_message3.Close();
-                        form_message3 = new Form_Message("БОСС!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 400)
-                        };
-                        //form_message3 = new Form_Message("Крипы!");
-                        form_message3.Show();
-                        // timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
-                        // timer_ClearWave.Start();
-                    }
+                    
                 }
                 if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 != 0))
                 {
-                    if (!form_message3.IsHandleCreated)
-                    {
-                        form_message3.Close();
-                        form_message3 = new Form_Message("Крипы!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 400)
-                        };
-                        form_message3.Show();
-                        // timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
-                        // timer_ClearWave.Start();
-                    }
+                    
                 }
                 if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 == 0))
                 {
-                    if (!form_message3.IsHandleCreated)
-                    {
-                        form_message3.Close();
-                        form_message3 = new Form_Message("Free time!")
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(60, 400)
-                        };
-                        form_message3.Show();
-                        timer_ClearWave.Tick += new EventHandler(ClearWaveFormMessage);
-                        timer_ClearWave.Start();
-                    }
-                }
-                if (checkBox_MidListWaves.Checked)
-                {
-                    if (!form_message4.IsHandleCreated)
-                    {
-                        UpdateWavesList();
-                    }
+                    
                 }
             }
         }
@@ -372,36 +274,6 @@ namespace RDA_AFK_Clicker
                     tmp_list.Add((game_minutes + i).ToString() + " - Крипы");
                 }
             }
-            form_message4 = new Form_Message_List(tmp_list)
-            {
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(60, 60)
-            };
-            form_message4.Show();
-            // timer_ClearWavesList.Tick += new EventHandler(ClearWavesListFormMessage);
-            // timer_ClearWavesList.Start();
-        }
-
-        private void ClearNotifyFormMessage(object sender, EventArgs e)
-        {
-            if(form_message2.IsHandleCreated)
-                form_message2.Close();
-            timer_ClearNotify.Tick -= new EventHandler(ClearNotifyFormMessage);
-            timer_ClearNotify.Stop();
-        }
-        private void ClearWaveFormMessage(object sender, EventArgs e)
-        {
-            if (form_message3.IsHandleCreated)
-                form_message3.Close();
-            timer_ClearWave.Tick -= new EventHandler(ClearWaveFormMessage);
-            timer_ClearWave.Stop();
-        }
-        private void ClearWavesListFormMessage(object sender, EventArgs e)
-        {
-            if (form_message4.IsHandleCreated)
-                form_message4.Close();
-            timer_ClearWavesList.Tick -= new EventHandler(ClearWavesListFormMessage);
-            timer_ClearWavesList.Stop();
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
@@ -464,7 +336,7 @@ namespace RDA_AFK_Clicker
                 "Чтобы путь получился: steamapps\\common\\dota 2 beta\\game\\dota\\cfg\\gamestate_integration\n" +
                 "В эту папку скопировать файл, данный в архиве\n");
         }
-        private void button_IsWorking_Click(object sender, EventArgs e)
+        private void button_SettingConfig_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Укажите путь до папки игры Dota 2");
             using (var fbd = new FolderBrowserDialog())
@@ -543,13 +415,6 @@ namespace RDA_AFK_Clicker
             notifyIcon1.Dispose();
             gsl.Stop();
             gsl.Dispose();
-        }
-        private void checkBox_MidListWaves_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!checkBox_MidListWaves.Checked)
-            {
-                form_message4.Close();
-            }
         }
     }
 }
