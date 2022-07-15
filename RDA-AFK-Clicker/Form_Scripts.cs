@@ -1,14 +1,7 @@
 ﻿using AutoHotkey.Interop;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RDA_AFK_Clicker
@@ -62,7 +55,7 @@ namespace RDA_AFK_Clicker
             value = textBox.Text;
             return dialogResult;
         }
-
+        AutoHotkeyEngine ahk;
         private void Form2_Load(object sender, EventArgs e)
         {
             UpdateScripts();
@@ -83,7 +76,7 @@ namespace RDA_AFK_Clicker
 
         private void listBox_ScriptsSelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBox_Scripts.SelectedIndex == -1) { return; };
+            if (listBox_Scripts.SelectedIndex == -1) { return; };
             label_NameScript.Text = listBox_Scripts.SelectedItem.ToString();
             button_RecordScript.Enabled = true;
             if (File.Exists(Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\\" + listBox_Scripts.SelectedItem.ToString()))
@@ -110,10 +103,10 @@ namespace RDA_AFK_Clicker
             button_StartScript.Enabled = false;
         }
         private void button_StartScript_Click(object sender, EventArgs e)
-        {   
+        {
             //ahk.Reset();
             ahk = new AutoHotkeyEngine();
-            ahk.LoadFile(Path.GetDirectoryName(Application.ExecutablePath)+"\\Scripts\\" + listBox_Scripts.SelectedItem.ToString());
+            ahk.LoadFile(Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\\" + listBox_Scripts.SelectedItem.ToString());
         }
 
         private void button_RecordScript_Click(object sender, EventArgs e)
@@ -128,9 +121,9 @@ namespace RDA_AFK_Clicker
             //config with params for ahk creator file (macro_recorder_v02)
             File.WriteAllText(Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86" + "\\config.ini",
                             "[Clicker]\n" +
-                            "cfgdirectory="+ Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\n"+
-                            "cfgfilename=" + listBox_Scripts.SelectedItem.ToString()+"\n"+
-                            "cfgworkdir=" + Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86\n"+
+                            "cfgdirectory=" + Path.GetDirectoryName(Application.ExecutablePath) + "\\Scripts\n" +
+                            "cfgfilename=" + listBox_Scripts.SelectedItem.ToString() + "\n" +
+                            "cfgworkdir=" + Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86\n" +
                             "cfgstopscripttext=Идёт выполнение...Ctrl+S для ОСТАНОВКИ"
                             );
             ahk.LoadFile(Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86\\macro_recorder_v02.ahk");
@@ -140,7 +133,8 @@ namespace RDA_AFK_Clicker
         {
             //more save code
             if (checkBox_Debug.Checked)
-            {   if(listBox_Scripts.SelectedIndex != -1)
+            {
+                if (listBox_Scripts.SelectedIndex != -1)
                     button_ChangeScript.Enabled = true;
             }
             else

@@ -1,11 +1,11 @@
-﻿using Dota2GSI;
+﻿using AutoHotkey.Interop;
+using Dota2GSI;
 using System;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using System.Configuration;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using AutoHotkey.Interop;
+using System.Windows.Forms;
 
 namespace RDA_AFK_Clicker
 {
@@ -100,7 +100,7 @@ namespace RDA_AFK_Clicker
             }
             game_seconds = gs.Map.ClockTime % 60;
             label_GoldCounter.Text = gs.Player.Gold.ToString();
-            label_GameTime.Text = game_minutes.ToString()+":"+game_seconds.ToString();
+            label_GameTime.Text = game_minutes.ToString() + ":" + game_seconds.ToString();
             if (checkBox_Enable.Checked)
             {
                 IntPtr WindowToFind = FindWindow(null, "Dota 2");
@@ -114,10 +114,11 @@ namespace RDA_AFK_Clicker
                         IntPtr tmpThread = GetWindowThreadProcessId(tmp, IntPtr.Zero);
                         IntPtr WindowToFindThread = GetWindowThreadProcessId(WindowToFind, IntPtr.Zero);
                         //if dota in active window
-                        if(tmp == WindowToFind)
+                        if (tmp == WindowToFind)
                         {
                             ahk_helper.ExecFunction("PressBuyButton_Active", config.AppSettings.Settings["bind_key"].Value, "1");
-                        } else
+                        }
+                        else
                         {
                             ahk_helper.ExecFunction("PressBuyButton_Inactive", config.AppSettings.Settings["bind_key"].Value, "1");
                         }
@@ -127,7 +128,8 @@ namespace RDA_AFK_Clicker
                 {
                     label_Status.Text = "Dota 2 не открыта.";
                 }
-            } else
+            }
+            else
             {
                 label_Status.Text = "Не включен.";
             }
@@ -232,7 +234,7 @@ namespace RDA_AFK_Clicker
                 {
                     tmp_string += (game_minutes + i).ToString() + " - Босс\n";
                 }
-                else if((game_minutes + i) % 6 == 0)
+                else if ((game_minutes + i) % 6 == 0)
                 {
                     tmp_string += (game_minutes + i).ToString() + " - Freetime\n";
                 }
@@ -246,14 +248,15 @@ namespace RDA_AFK_Clicker
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
-            if(textBox_BindKey.Text.Length >= 1 && Int32.Parse(textBox_GoldMax.Text) > 0)
+            if (textBox_BindKey.Text.Length >= 1 && Int32.Parse(textBox_GoldMax.Text) > 0)
             {
                 config.AppSettings.Settings["bind_key"].Value = textBox_BindKey.Text;
                 config.AppSettings.Settings["gold_max"].Value = textBox_GoldMax.Text;
                 config.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
                 label_Status.Text = "Сохранено!";
-            } else
+            }
+            else
             {
                 MessageBox.Show("Введены неверные параметры. Золото должно быть больше нуля и написана любая клавиша (Length >= 1)");
             }
@@ -274,7 +277,7 @@ namespace RDA_AFK_Clicker
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     var matched = reg.Match(fbd.SelectedPath.ToString());
-                    DirectoryInfo tmpdir = new DirectoryInfo(fbd.SelectedPath.ToString()+ "\\game\\dota\\cfg\\gamestate_integration");
+                    DirectoryInfo tmpdir = new DirectoryInfo(fbd.SelectedPath.ToString() + "\\game\\dota\\cfg\\gamestate_integration");
                     if (!Directory.Exists(tmpdir.ToString()))
                     {
                         Directory.CreateDirectory(tmpdir.ToString());
@@ -304,7 +307,8 @@ namespace RDA_AFK_Clicker
                             "}\n"
                             );
                             MessageBox.Show("Файл был успешно создан.");
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("Указан неверный путь, необходимо выбрать на подобии:\n dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
                         }
@@ -314,8 +318,8 @@ namespace RDA_AFK_Clicker
         }
         private void OpenScripts_Menu(object sender, EventArgs e)
         {
-            Form_Scripts form_scripts = new Form_Scripts();
-            form_scripts.Show();
+            //Form_Scripts form_scripts = new Form_Scripts();
+            //form_scripts.Show();
         }
         private void AboutProgram_Menu(object sender, EventArgs e)
         {
@@ -350,7 +354,8 @@ namespace RDA_AFK_Clicker
             {
                 ahk_helper.ExecFunction("Print_Waves_List", "", "false");
                 UpdateWavesList();
-            } else
+            }
+            else
             {
                 ahk_helper.ExecFunction("Print_Waves_List", "", "false");
             }

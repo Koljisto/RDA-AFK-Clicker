@@ -1,14 +1,7 @@
 ﻿using AutoHotkey.Interop;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RDA_AFK_Clicker
@@ -67,7 +60,7 @@ namespace RDA_AFK_Clicker
 
         private void button_SaveClick(object sender, EventArgs e)
         {
-            if(listBox_Commands.SelectedIndex == -1) { return; }
+            if (listBox_Commands.SelectedIndex == -1) { return; }
             listBox_Commands.Items[listBox_Commands.SelectedIndex] = domainUpDown_Command.SelectedItem.ToString() + ";" + textBox_Param.Text;
             //default header for script
             string tmp_Script = File.ReadAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\SystemScripts\\base_include.ahk");
@@ -111,7 +104,7 @@ namespace RDA_AFK_Clicker
                 return;
             }
             //if index equal 0 need create new item down else create on current index
-            if(listBox_Commands.SelectedIndex == 0)
+            if (listBox_Commands.SelectedIndex == 0)
                 listBox_Commands.Items.Insert(listBox_Commands.SelectedIndex + 1, "Новая команда");
             else
                 listBox_Commands.Items.Insert(listBox_Commands.SelectedIndex, "Новая команда");
@@ -119,7 +112,7 @@ namespace RDA_AFK_Clicker
 
         private void button_RemoveCommand_Click(object sender, EventArgs e)
         {
-            if(listBox_Commands.SelectedIndex == -1) { return; }
+            if (listBox_Commands.SelectedIndex == -1) { return; }
             listBox_Commands.Items.RemoveAt(listBox_Commands.SelectedIndex);
         }
 
@@ -137,7 +130,7 @@ namespace RDA_AFK_Clicker
 
         private void listBox_Commands_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBox_Commands.SelectedIndex == -1) { return; }
+            if (listBox_Commands.SelectedIndex == -1) { return; }
             //get listbox item and put it in regex for convert it in params
             var matchAll = reg_command.Matches(listBox_Commands.SelectedItem.ToString());
             if (matchAll[0].Success)
