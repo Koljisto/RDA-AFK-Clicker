@@ -1,17 +1,10 @@
 ﻿using Dota2GSI;
-using Dota2GSI.Nodes;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WindowsInput;
-using WindowsInput.Native;
 using System.Configuration;
-using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Drawing;
 using AutoHotkey.Interop;
 
 namespace RDA_AFK_Clicker
@@ -61,71 +54,28 @@ namespace RDA_AFK_Clicker
         private const int WS_EX_LAYERED = 0x00080000;
         private const int WS_EX_TRANSPARENT = 0x20;
         private const int GWL_EXSTYLE = -20;
-        InputSimulator sim = new InputSimulator();
         Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         Regex reg = new Regex(@"dota 2 beta");
         Regex reg_final = new Regex(@"dota 2 beta\\game\\dota\\cfg\\gamestate_integration");
-        VirtualKeyCode selectedKeyCode;
         int game_minutes;
         int game_seconds;
-        AutoHotkeyEngine ahk_helper = new AutoHotkeyEngine();
+        AutoHotkeyEngine ahk_helper;
         public Form_Main()
         {
             InitializeComponent();
+            File.Copy("SystemScripts\\global_helper.ahk", Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86\\global_helper.ahk", true);
+            ahk_helper = AutoHotkeyEngine.Instance;
+            ahk_helper.LoadFile(Path.GetTempPath() + "\\AutoHotkey.Interop\\1.0.0.0\\x86\\global_helper.ahk");
         }
         GameStateListener gsl;
         private void Form_Main_Load(object sender, EventArgs e)
         {
-            //form_message = new Form_Message("Test");
-            
             this.Menu = new MainMenu();
             MenuItem item = new MenuItem("Меню");
             this.Menu.MenuItems.Add(item);
             item.MenuItems.Add("Скрипты", new EventHandler(OpenScripts_Menu));
             item.MenuItems.Add("О программе", new EventHandler(AboutProgram_Menu));
-            //item.MenuItems.Add("Open", new EventHandler(Open_Click));
-            //kostili
-            switch (config.AppSettings.Settings["bind_key"].Value)
-            {
-                case "F1":
-                    selectedKeyCode = VirtualKeyCode.F1;
-                    domainUpDown_BindKey.SelectedIndex = 0;
-                    break;
-                case "F2":
-                    selectedKeyCode = VirtualKeyCode.F2;
-                    domainUpDown_BindKey.SelectedIndex = 1;
-                    break;
-                case "F3":
-                    selectedKeyCode = VirtualKeyCode.F3;
-                    domainUpDown_BindKey.SelectedIndex = 2;
-                    break;
-                case "F4":
-                    selectedKeyCode = VirtualKeyCode.F4;
-                    domainUpDown_BindKey.SelectedIndex = 3;
-                    break;
-                case "F5":
-                    selectedKeyCode = VirtualKeyCode.F5;
-                    domainUpDown_BindKey.SelectedIndex = 4;
-                    break;
-                case "F6":
-                    selectedKeyCode = VirtualKeyCode.F6;
-                    domainUpDown_BindKey.SelectedIndex = 5;
-                    break;
-                case "F7":
-                    selectedKeyCode = VirtualKeyCode.F7;
-                    domainUpDown_BindKey.SelectedIndex = 6;
-                    break;
-                case "F8":
-                    selectedKeyCode = VirtualKeyCode.F8;
-                    domainUpDown_BindKey.SelectedIndex = 7;
-                    break;
-                case "F10":
-                    selectedKeyCode = VirtualKeyCode.F10;
-                    domainUpDown_BindKey.SelectedIndex = 8;
-                    break;
-                default:
-                    break;
-            }
+            textBox_BindKey.Text = config.AppSettings.Settings["bind_key"].Value;
             textBox_GoldMax.Text = config.AppSettings.Settings["gold_max"].Value;
             label_Status.Text = "Ожидаю...";
             gsl = new GameStateListener(4000);
@@ -138,17 +88,19 @@ namespace RDA_AFK_Clicker
         }
         void OnNewGameState(GameState gs)
         {
-            if(game_minutes != gs.Map.ClockTime / 60)
+            if (game_minutes != gs.Map.ClockTime / 60)
             {
                 game_minutes = gs.Map.ClockTime / 60;
                 //tick game minute funcs
                 if (checkBox_MidListWaves.Checked)
+                {
+                    ahk_helper.ExecFunction("Print_Waves_List", "", "false");
                     UpdateWavesList();
+                }
             }
             game_seconds = gs.Map.ClockTime % 60;
             label_GoldCounter.Text = gs.Player.Gold.ToString();
             label_GameTime.Text = game_minutes.ToString()+":"+game_seconds.ToString();
-            //label_GameTime.Text = gs.Map.GameTime.ToString();
             if (checkBox_Enable.Checked)
             {
                 IntPtr WindowToFind = FindWindow(null, "Dota 2");
@@ -156,8 +108,6 @@ namespace RDA_AFK_Clicker
                 if (WindowToFind != IntPtr.Zero)
                 {
                     label_Status.Text = "В работе.";
-                    //SendMessage(WindowToFind, WM_KEYDOWN, (IntPtr)WM_CHAR, (UIntPtr)0x00410001);
-                    //SendMessage(WindowToFind, WM_KEYUP, (IntPtr)WM_CHAR, (UIntPtr)0xC0410001);
                     if (gs.Player.Gold >= Int32.Parse(config.AppSettings.Settings["gold_max"].Value))
                     {
                         IntPtr tmp = GetForegroundWindow();
@@ -166,21 +116,10 @@ namespace RDA_AFK_Clicker
                         //if dota in active window
                         if(tmp == WindowToFind)
                         {
-                            sim.Keyboard.KeyUp(VirtualKeyCode.LMENU);
-                            sim.Keyboard.KeyPress(selectedKeyCode);
+                            ahk_helper.ExecFunction("PressBuyButton_Active", config.AppSettings.Settings["bind_key"].Value, "1");
                         } else
                         {
-                            AttachThreadInput(tmpThread, WindowToFindThread, true);
-                            AttachThreadInput(WindowToFindThread, tmpThread, false);
-                            SetFocus(WindowToFind);
-                            //make sure if works need 100 ms delay
-                            System.Threading.Thread.Sleep(100);
-                            //keyup system key LAlt
-                            sim.Keyboard.KeyUp(VirtualKeyCode.LMENU);
-                            sim.Keyboard.KeyPress(selectedKeyCode);
-                            SetFocus(tmp);
-                            AttachThreadInput(tmpThread, WindowToFindThread, false);
-                            AttachThreadInput(WindowToFindThread, tmpThread, true);
+                            ahk_helper.ExecFunction("PressBuyButton_Inactive", config.AppSettings.Settings["bind_key"].Value, "1");
                         }
                     }
                 }
@@ -200,12 +139,12 @@ namespace RDA_AFK_Clicker
                     if (gs.Abilities[1].Cooldown == 0)
                     {
                         //Съешь дерево!
-
+                        ahk_helper.ExecFunction("Print_Hero_Help", "Съешь дерево!", "true");
                     }
                     else
                     {
                         //Убрать сообщение
-
+                        ahk_helper.ExecFunction("Print_Hero_Help", "", "false");
                     }
                 }
                 if (gs.Hero.Name.ToString() == "npc_dota_hero_tinker")
@@ -216,118 +155,107 @@ namespace RDA_AFK_Clicker
                     if (gs.Abilities[4].Cooldown == 0)
                     {
                         //Улучши башню!
-                        
+                        ahk_helper.ExecFunction("Print_Hero_Help", "Улучши башню!", "true");
                     }
                     else
                     {
                         //Убрать текст
-
+                        ahk_helper.ExecFunction("Print_Hero_Help", "", "false");
                     }
                 }
             }
+
             if (checkBox_MidHelper.Checked)
             {
-                label_Minutes.Text = (game_minutes % 5).ToString();
-                if (checkBox_MidHelperNotify1.Checked && (game_seconds >= 10) && (game_seconds <= 12))
-                {   
-                    
-                }
-                if (checkBox_MidHelperNotify2.Checked && (game_seconds >= 23) && (game_seconds <= 25))
+                if (checkBox_MidHelperNotify1.Checked && (game_seconds >= 10) && (game_seconds <= 12) && !((game_minutes % 5 != 0) && (game_minutes % 6 == 0)))
                 {
-                   
+                    ahk_helper.ExecFunction("Print_Notify1", "true");
                 }
-                if (checkBox_MidHelperNotify3.Checked && (game_seconds >= 31) && (game_seconds <= 33))
+                else
                 {
-                    
+                    ahk_helper.ExecFunction("Print_Notify1", "false");
                 }
-                if(checkBox_MidOnlyBosses.Checked && (game_minutes % 5 == 0))
+
+                if (checkBox_MidHelperNotify2.Checked && (game_seconds >= 23) && (game_seconds <= 25) && !((game_minutes % 5 != 0) && (game_minutes % 6 == 0)))
                 {
-                    
+                    ahk_helper.ExecFunction("Print_Notify2", "true");
                 }
+                else
+                {
+                    ahk_helper.ExecFunction("Print_Notify2", "false");
+                }
+
+                if (checkBox_MidHelperNotify3.Checked && (game_seconds >= 31) && (game_seconds <= 33) && !((game_minutes % 5 != 0) && (game_minutes % 6 == 0)))
+                {
+                    ahk_helper.ExecFunction("Print_Notify3", "true");
+                }
+                else
+                {
+                    ahk_helper.ExecFunction("Print_Notify3", "false");
+                }
+
+                if (checkBox_MidOnlyBosses.Checked && (game_minutes % 5 == 0))
+                {
+                    ahk_helper.ExecFunction("Print_Wave_Boss", "boss", "true");
+                }
+                else
+                {
+                    ahk_helper.ExecFunction("Print_Wave_Boss", "", "false");
+                }
+
                 if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 != 0))
                 {
-                    
+                    ahk_helper.ExecFunction("Print_Wave_Creeps", "creeps", "true");
                 }
+                else
+                {
+                    ahk_helper.ExecFunction("Print_Wave_Creeps", "", "false");
+                }
+
                 if (checkBox_MidOnlyCreeps.Checked && (game_minutes % 5 != 0) && (game_minutes % 6 == 0))
                 {
-                    
+                    ahk_helper.ExecFunction("Print_Wave_Freetime", "free_time", "true");
+                }
+                else
+                {
+                    ahk_helper.ExecFunction("Print_Wave_Freetime", "", "false");
                 }
             }
         }
-
         private void UpdateWavesList()
         {
-            List<string> tmp_list = new List<string>();
+            string tmp_string = "";
             for (int i = 0; i < 6; i++)
             {
                 // tmp_list.Add((gs.Map.ClockTime / 60 % 5).ToString() + " - Босс");
                 if ((game_minutes + i) % 5 == 0)
                 {
-                    tmp_list.Add((game_minutes + i).ToString() + " - Босс");
+                    tmp_string += (game_minutes + i).ToString() + " - Босс\n";
                 }
                 else if((game_minutes + i) % 6 == 0)
                 {
-                    tmp_list.Add((game_minutes + i).ToString() + " - Free");
+                    tmp_string += (game_minutes + i).ToString() + " - Freetime\n";
                 }
                 else
                 {
-                    tmp_list.Add((game_minutes + i).ToString() + " - Крипы");
+                    tmp_string += (game_minutes + i).ToString() + " - Крипы\n";
                 }
             }
+            ahk_helper.ExecFunction("Print_Waves_List", tmp_string, "true");
+
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
-            if(domainUpDown_BindKey.SelectedItem.ToString().Length == 2 && Int32.Parse(textBox_GoldMax.Text) > 0)
+            if(textBox_BindKey.Text.Length >= 1 && Int32.Parse(textBox_GoldMax.Text) > 0)
             {
-                switch (domainUpDown_BindKey.SelectedItem.ToString())
-                {
-                    case "F1":
-                        selectedKeyCode = VirtualKeyCode.F1;
-                        config.AppSettings.Settings["bind_key"].Value = "F1";
-                        break;
-                    case "F2":
-                        selectedKeyCode = VirtualKeyCode.F2;
-                        config.AppSettings.Settings["bind_key"].Value = "F2";
-                        break;
-                    case "F3":
-                        selectedKeyCode = VirtualKeyCode.F3;
-                        config.AppSettings.Settings["bind_key"].Value = "F3";
-                        break;
-                    case "F4":
-                        selectedKeyCode = VirtualKeyCode.F4;
-                        config.AppSettings.Settings["bind_key"].Value = "F4";
-                        break;
-                    case "F5":
-                        selectedKeyCode = VirtualKeyCode.F5;
-                        config.AppSettings.Settings["bind_key"].Value = "F5";
-                        break;
-                    case "F6":
-                        selectedKeyCode = VirtualKeyCode.F6;
-                        config.AppSettings.Settings["bind_key"].Value = "F6";
-                        break;
-                    case "F7":
-                        selectedKeyCode = VirtualKeyCode.F7;
-                        config.AppSettings.Settings["bind_key"].Value = "F7";
-                        break;
-                    case "F8":
-                        selectedKeyCode = VirtualKeyCode.F8;
-                        config.AppSettings.Settings["bind_key"].Value = "F8";
-                        break;
-                    case "F10":
-                        selectedKeyCode = VirtualKeyCode.F10;
-                        config.AppSettings.Settings["bind_key"].Value = "F10";
-                        break;
-                    default:
-                        MessageBox.Show("Введён неверный бинд клавиши. Восстановлена последняя успешная");
-                        break;
-                }
+                config.AppSettings.Settings["bind_key"].Value = textBox_BindKey.Text;
                 config.AppSettings.Settings["gold_max"].Value = textBox_GoldMax.Text;
                 config.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
                 label_Status.Text = "Сохранено!";
             } else
             {
-                MessageBox.Show("Введены неверные параметры");
+                MessageBox.Show("Введены неверные параметры. Золото должно быть больше нуля и написана любая клавиша (Length >= 1)");
             }
         }
         private void button_ShowMessage_Click(object sender, EventArgs e)
@@ -415,6 +343,42 @@ namespace RDA_AFK_Clicker
             notifyIcon1.Dispose();
             gsl.Stop();
             gsl.Dispose();
+        }
+        private void checkBox_MidListWaves_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_MidListWaves.Checked)
+            {
+                ahk_helper.ExecFunction("Print_Waves_List", "", "false");
+                UpdateWavesList();
+            } else
+            {
+                ahk_helper.ExecFunction("Print_Waves_List", "", "false");
+            }
+        }
+        private void checkBox_Helper_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_Helper.Checked)
+                ahk_helper.ExecFunction("Print_Hero_Help", "", "false");
+        }
+        private void checkBox_FullAFK_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_FullAFK.Checked)
+            {
+                ahk_helper.ExecFunction("ChangeTransparent", "Off");
+            }
+            else
+            {
+                ahk_helper.ExecFunction("ChangeTransparent", "0");
+            }
+        }
+        private void checkBox_Enable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_Enable.Checked)
+            {
+                //ahk_helper.SetVar("manual_stop", "false");
+                //label_Status.Text = ahk_helper.GetVar("manual_stop");
+                ahk_helper.ExecFunction("Print_Disable_AutoBuy", "true");
+            }
         }
     }
 }

@@ -15,9 +15,10 @@ namespace RDA_AFK_Clicker
 {
     public partial class Form_Scripts : Form
     {
-        public Form_Scripts()
+        public Form_Scripts(AutoHotkeyEngine ahk_helper_script_local)
         {
             InitializeComponent();
+            ahk_helper_script = ahk_helper_script_local;
         }
         //create inputbox for get name new script
         public static DialogResult InputBox(string title, string promptText, ref string value)
@@ -67,7 +68,7 @@ namespace RDA_AFK_Clicker
             UpdateScripts();
             //SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
-        AutoHotkeyEngine ahk = new AutoHotkeyEngine();
+        AutoHotkeyEngine ahk_helper_script;
         private void UpdateScripts()
         {
             listBox_Scripts.Items.Clear();

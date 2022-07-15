@@ -128,7 +128,7 @@ namespace RDA_AFK_Clicker
             //if hook checkbox is true then start ahk with mouse pos
             if (checkBox_HookMouse.Checked)
             {
-                AutoHotkeyEngine ahk = new AutoHotkeyEngine();
+                AutoHotkeyEngine ahk = AutoHotkeyEngine.Instance;
                 ahk.LoadFile(Path.GetDirectoryName(Application.ExecutablePath) + "\\SystemScripts\\mousepos.ahk");
                 checkBox_HookMouse.Enabled = false;
                 checkBox_HookMouse.Checked = false;
